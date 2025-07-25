@@ -1,7 +1,4 @@
-import os
-import time
-
-# Token & API key dari argumen
+import os, time
 from sys import argv
 
 if len(argv) < 3:
@@ -11,18 +8,20 @@ if len(argv) < 3:
 telegram_token = argv[argv.index("--token") + 1]
 openrouter_api_key = argv[argv.index("--api_key") + 1]
 
-print("🚀 Railway Auto Deploy Started...")
+print("🚀 Generating .env and pushing to GitHub repo...")
 
-# Simpan ke .env
+# Generate .env content
 with open(".env", "w") as f:
     f.write(f"telegram_token={telegram_token}\n")
     f.write(f"openrouter_api_key={openrouter_api_key}\n")
 
-# Railway init + deploy
-print("🔧 Inisialisasi Railway Project...")
-os.system("railway init --yes")
-time.sleep(2)
-print("⬆️ Upload ke Railway...")
-os.system("railway up")
+# Inisialisasi git dan push
+os.system("git init")
+os.system("git remote remove origin 2>/dev/null")
+os.system("git remote add origin https://github.com/masasimoto/telegram-ai-bot.git")
+os.system("git add .")
+os.system("git commit -m 'Auto deploy from Termux 🚀'")
+os.system("git branch -M main")
+os.system("git push -f origin main")
 
-print("✅ DONE! Bot kamu sudah dideploy ke Railway.")
+print("✅ Sukses push ke GitHub. Railway akan auto-deploy.")
